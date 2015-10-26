@@ -12,8 +12,13 @@ bkg.x = x
 bkg.y = y
 game:insert(bkg)
 
+
+local leftWall = display.newRect( -310, 10, 0.001, display.contentHeight * 2 )
+physics.addBody( leftWall, "static",{density = 1.0, friction = 2.0} )
+game:insert(leftWall)
+
 local circle = display.newCircle(  -14 , 600, 25 )
-physics.addBody( circle, "dinamic", {density = 8.0, friction = 0.3, bounce = 0.2 ,
+physics.addBody( circle, "dinamic", {density = 8.0, friction = 0.3, bounce = 0.2 , bounce = 0.1,
 radius = 25	} )
 game:insert( circle )
 
