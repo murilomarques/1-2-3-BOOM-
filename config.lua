@@ -3,10 +3,11 @@ application =
 
 	content =
 	{
-		width = 768,
-		height = 540, 
-		scale = "letterBox",
-		fps = 30,
+		
+		width = 320,
+		height = 480, 
+		scale = "adaptative" --,zoomEven, letterbox, adaptative, zoomStretch
+		
 		
 		--[[
 		imageSuffix =
