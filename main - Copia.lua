@@ -2,81 +2,113 @@ local physics = require("physics")
 physics.start()
 physics.setScale( 50 )
 
-local x = display.contentCenterX
-local y = display.contentCenterY
+x = display.contentWidth
+y = display.contentHeight
+x2 = display.contentCenterX
+y2 = display.contentCenterY
 
-local game = display.newGroup( )
+local speed = 5500
+local score = 0
+local tm2
+local scoreTxt
+local objUm
+local scroll = 3
+local personagem
 
-local bkg = display.newImage("Img/fundo_teste.png")
-bkg.x = x
-bkg.y = y
-game:insert(bkg)
-
-
-local leftWall = display.newRect( -310, 10, 0.001, display.contentHeight * 2 )
-physics.addBody( leftWall, "static",{density = 1.0, friction = 2.0} )
-game:insert(leftWall)
-
-local circle = display.newCircle(  -14 , 600, 25 )
-physics.addBody( circle, "dinamic", {density = 8.0, friction = 0.3, bounce = 0.2 , bounce = 0.1,
-radius = 25	} )
-game:insert( circle )
-
-local canhao = display.newImage("Img/canhao2.png")
-canhao.x = 1
-canhao.y = 610
-game:insert( canhao )
-
-local floor = display.newImage( "Img/chao_teste.png" )	
-floor.x = 200
-floor.y = 720
-physics.addBody( floor, "static",{density = 1.0, friction = 2.0, bounce = 0.1} )
-game:insert(floor)
+local velocidadeUp = {}
+local velocidade = {}
+local criarPersonagem = {}
+local bgScroll = {}
+local scoreUp = {}
+local setupScore = {}
 
 
---for i = 0, 15 do
+local bkg = display.newImageRect("Img/fundo1.png", x, y)
+bkg.x = x - 1000
+bkg.y = y2
 
---	local rect = display.newRect(800, 260 + i*30, 100, 40)
---	physics.addBody( rect, "dinamic", {density = 1.0, friction = 0.3, bounce = 0.2} )
---game:insert(rect)
---	end
+local bkg2 = display.newImageRect("Img/fundo1.png", x, y)
+bkg2.x = bkg.x + x
+bkg2.y = y2
 
-function circleTouched(event)
-	if event.phase == "began" then 
-		display.getCurrentStage( ) :setFocus( circle )
-	elseif event.phase == "ended" then
+local bkg3 = display.newImageRect("Img/fundo1.png", x, y)
+bkg3.x = bkg2.x + x
+bkg3.y = y2
 
-		circle:applyLinearImpulse( event.xStart - event.x, event.yStart - event.y, circle.x,
-		circle.y )
-display.getCurrentStage():setFocus( nil )
+local bkg4 = display.newImageRect("Img/fundo2.png", x, y)
+bkg4.x = bkg
+bkg4.y = y2
+
+local bkg5 = display.newImageRect("Img/fundo2.png", x, y)
+bkg5.x = bkg3
+bkg5.y = y2
+
+
+--TETO E PISO
+  teto = display.newRect( x2, -1, x +100, 1 )
+  teto:setFillColor( 0,0,0 )
+  physics.addBody( teto, "static" )
+  teto.name = "teto"
+
+  piso = display.newRect( x2, y, x +100, 1 )
+  piso:setFillColor( 0, 0, 0 )
+  physics.addBody( piso, "static" )
+  piso.name = "piso"
+
+function bgScroll (event)
+bkg.x = bkg.x - scroll
+bkg2.x = bkg2.x - scroll
+bkg3.x = bkg3.x - scroll
+bkg4.x = bkg4.x - scroll
+bkg5.x = bkg5.x - scroll
+
+  -- Movendo as imagens para o fim da tela
+if (bkg.x + bkg.contentWidth) < 0 then
+bkg:translate( x * 3, 0 )
+  end
+
+if (bkg2.x + bkg2.contentWidth) < 0 then
+bkg2:translate( x * 3, 0 )
+  end
+
+if (bkg3.x + bkg3.contentWidth) < 0 then
+bkg3:translate( x * 3, 0 )
+  end
+
+if (bkg4.x + bkg4.contentWidth) < 0 then
+bkg4:translate( x * 3, 0 )
+  end
+
+if (bkg5.x + bkg5.contentWidth) < 0 then
+bkg5:translate( x * 3, 0 )
+  end
 
 end
-end
 
-circle:addEventListener( "touch", circleTouched )
-
-
-function loop(e)
-	local targetx = 2 - circle.x
-	game.x = game.x + ((targetx - game.x)*0.1)
+function setupScore( )
+  scoreTxt = display.newText('Distance 0', x2 - 50, 300 , native.systemFontBold, 16)
+  scoreTxt:setTextColor(0, 0, 0)
 
 end
 
-Runtime:addEventListener("enterFrame", loop)
+function scoreUp()
+   --incrementando a distancia
+    score = score + 10
+    scoreTxt.text = string.format( "Distance %d", score)
+end
 
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------------------------------------
+function criarPersonagem()
+	personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
+	transition.to( personagem, {time = 1900, x = math.random(x), y = math.random(y)})
+end
 
 function criaObstaculo()
-	 objUm = display.newImage("Img/banana.png", display.contentWidth/2, display.contentHeight/2)
+	 objUm = display.newImage("Img/banana.png", x, y)
 	 objUm:addEventListener("touch", removeObstaculo)
+	 objUm.y = math.random(25 , y)
+	 objUm.rotation = math.random(x)
+	 transition.to( objUm, {time = speed, x = -50, y = math.random(y)})
+
 end
 
 function removeObstaculo(e)
@@ -84,5 +116,36 @@ function removeObstaculo(e)
 		display.remove(e.target)
 	end
 end
+
+function velocidade()
+    speed = speed - 1000
+    --Icon
+    local icon = display.newImage('Img/speed.png', x2 , y2)
+    transition.from(icon, {time = 200, alpha = 0.1, onComplete = function() timer.performWithDelay(500, function() 
+      transition.to(icon, {time = 200, alpha = 0.1, onComplete = function() display.remove(icon) icon = nil end}) end) end})
+end
+
+function velocidadeUp(event)
+    if (score == 50) then
+        velocidade()
+    end
+    if (score == 70) then
+        velocidade()
+    end
+    if (score == 90) then
+        velocidade()
+    end
+    if (score == 1000) then
+        velocidade()
+    end
+end
+
+
+
+criarPersonagem()
+setupScore()	
+tm2 = timer.performWithDelay(1500, scoreUp, 0)
 Runtime:addEventListener("enterFrame", bgScroll)
-criaObj = timer.performWithDelay(2000, criaObstaculo, -1)
+criaObj = timer.performWithDelay(600, criaObstaculo, -1)
+velocidade()
+velocidadeUp()
