@@ -63,3 +63,26 @@ function loop(e)
 end
 
 Runtime:addEventListener("enterFrame", loop)
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+function criaObstaculo()
+	 objUm = display.newImage("Img/banana.png", display.contentWidth/2, display.contentHeight/2)
+	 objUm:addEventListener("touch", removeObstaculo)
+end
+
+function removeObstaculo(e)
+	if e.phase == "ended" then
+		display.remove(e.target)
+	end
+end
+Runtime:addEventListener("enterFrame", bgScroll)
+criaObj = timer.performWithDelay(2000, criaObstaculo, -1)
