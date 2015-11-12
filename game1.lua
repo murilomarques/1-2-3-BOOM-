@@ -12,7 +12,7 @@ local tm2
 local scoreTxt
 local obstaculoEsq
 local obstaculoDir
-local scroll = 3
+local scroll = 2
 local personagem
 local speedTm 
 local bkg
@@ -62,7 +62,7 @@ function scene:show(event)
 
   if(phase == "did") then
 
-    tm1 = timer.performWithDelay(600, criaObstaculo, -1)
+    tm1 = timer.performWithDelay(1500, criaObstaculo, -1)
     tm2 = timer.performWithDelay(1500, scoreUp, 0)
     Runtime:addEventListener("enterFrame", gameLoop)
     Runtime:addEventListener("enterFrame", bgScroll)
@@ -92,27 +92,27 @@ function setupBG()
 
   --Add imagens do bg
 
-  local bkg = display.newImageRect("Img/fundo1.png", x, y)
+  bkg = display.newImageRect("Img/fundo1.png", x, y)
   bkg.x = x - 1000
   bkg.y = y2
   scene.view:insert(bkg)
 
-  local bkg2 = display.newImageRect("Img/fundo1.png", x, y)
+  bkg2 = display.newImageRect("Img/fundo1.png", x, y)
   bkg2.x = bkg.x + x
   bkg2.y = y2
   scene.view:insert(bkg2)
 
-  local bkg3 = display.newImageRect("Img/fundo1.png", x, y)
+  bkg3 = display.newImageRect("Img/fundo1.png", x, y)
   bkg3.x = bkg2.x + x
   bkg3.y = y2
   scene.view:insert(bkg3)
 
-  local bkg4 = display.newImageRect("Img/fundo2.png", x, y)
+  bkg4 = display.newImageRect("Img/fundo2.png", x, y)
   bkg4.x = bkg
   bkg4.y = y2
   scene.view:insert(bkg4)
 
-  local bkg5 = display.newImageRect("Img/fundo2.png", x, y)
+  bkg5 = display.newImageRect("Img/fundo2.png", x, y)
   bkg5.x = bkg3
   bkg5.y = y2
   scene.view:insert(bkg5)
@@ -132,7 +132,7 @@ end
 
 
 function setupGroups()
-  obstaculos = display.newGroup( )
+  obstaculosGroup = display.newGroup( )
   personagemGroup = display.newGroup( )
   scene.view:insert(obstaculos)
   scene.view:insert(personagemGroup)
@@ -147,10 +147,15 @@ function criaObstaculo()
    obstaculoDir.y = math.random(25 , y)
    obstaculoDir.rotation = math.random(x)
    transition.to( obstaculoDir, {time = speed, x = -50, y = math.random(y)})
-   obstaculos:insert(obstaculoDir)
+  -- obstaculosGroup:insert(obstaculoDir)
 
    --Obstáculos da esquerda
-
+   obstaculoEsq = display.newImage("Img/banana.png", 0, 150)
+   physics.addBody(obstaculoDir, "kinematic")
+   obstaculoEsq:addEventListener("touch", removeObstaculo)
+   obstaculoEsq.y = math.random(25 , y)
+   obstaculoEsq.rotation = math.random(x)
+   transition.to( obstaculoEsq, {time = speed, x = 500, y = math.random(y)})
 end
 
 
@@ -186,16 +191,17 @@ bkg5:translate( x * 3, 0 )
 end
 
 function setupScore( )
-  scoreTxt = display.newText('Distance 0', x2 - 50, 300 , native.systemFontBold, 16)
+  scoreTxt = display.newText('Score 0', x2 - 50, 300 , native.systemFontBold, 16)
   scoreTxt:setTextColor(0, 0, 0)
 
 end
 
 function scoreUp()
-   --incrementando a distancia
+   --incrementando o score
     score = score + 10
-    scoreTxt.text = string.format( "Distance %d", score)
+    scoreTxt.text = string.format( "Score %d", score)
 end
+
 
 function setupInimigo()
   personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
@@ -206,6 +212,7 @@ end
 
 function removeObstaculo(e)
   if e.phase == "ended" then
+    score = score + 1
     display.remove(e.target)
   end
 end
@@ -233,6 +240,13 @@ function velocidadeUp(event)
         velocidade()
     end
 end
+
+--function onLocalCollision(event)
+  --if ( event.phase == "began" ) then
+
+
+  --end
+--end
 
 
 function gameLoop()
