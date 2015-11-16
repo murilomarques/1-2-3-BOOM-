@@ -23,7 +23,6 @@ local bkg2
 local bkg3
 local bkg4
 local bkg5
-local numObst = 1500
 
 
 
@@ -135,6 +134,8 @@ function criaObstaculo()
 
   --Obstáculos da direita
    obstaculoDir = display.newImage("Img/banana.png", x, y)
+   obstaculoDir.isSensor = true
+   obstaculoDir.name = "obstaculo"
    physics.addBody(obstaculoDir, "kinematic")
    obstaculoDir:addEventListener("touch", removeObstaculo)
    obstaculoDir.y = math.random(25 , y)
@@ -144,6 +145,8 @@ function criaObstaculo()
 
    --Obstáculos da esquerda
    obstaculoEsq = display.newImage("Img/banana.png", 0, 150)
+   obstaculoEsq.name = "obstaculo"
+   obstaculoEsq.isSensor = true
    physics.addBody(obstaculoEsq, "kinematic")
    obstaculoEsq:addEventListener("touch", removeObstaculo)
    obstaculoEsq.y = math.random(25 , y)
@@ -198,6 +201,8 @@ end
 
 function setupInimigo()
   personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
+  personagem.name = "personagem"
+  personagem.isSensor = true
   physics.addBody(personagem, "kinematic")
  -- transition.to( personagem, {time = 1900, x = math.random(x), y = math.random(y)})
 end
@@ -215,7 +220,7 @@ end
 
 
 function velocidade()
-    speed = speed - 1000
+    speed = speed - 600
     --Icon
     local icon = display.newImage('Img/speed.png', x2 , y2)
     transition.from(icon, {time = 200, alpha = 0.1, onComplete = function() timer.performWithDelay(500, function() 
@@ -228,9 +233,11 @@ function velocidadeUp(event)
     end
     if (score == 170) then
         velocidade()
+        scroll = 4
     end
-    if (score == 250) then
+    if (score == 200) then
         velocidade()
+        scroll = 12
     end
     if (score == 270) then
         velocidade()
@@ -243,18 +250,10 @@ end
 function onLocalCollision(event)
  if ( event.phase == "began" ) then
 
-    if(event.object1.name == "personagem" and event.object2.name == "obstaculoDir") then            
+    if(event.object1.name == "personagem" and event.object2.name == "obstaculo") then            
             gameOver()
-        end
-         
-    if(event.object1.name == "obstaculoDir" and event.object2.name == "personagem") then            
-            gameOver()
-        end
-    if(event.object1.name == "personagem" and event.object2.name == "obstaculoEsq") then            
-            gameOver()
-        end
-         
-    if(event.object1.name == "obstaculoEsq" and event.object2.name == "personagem") then            
+        end        
+    if(event.object1.name == "obstaculo" and event.object2.name == "personagem") then            
             gameOver()
         end
   end
