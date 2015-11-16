@@ -4,11 +4,14 @@ local physics = require("physics")
 physics.start()
 physics.setScale( 50 )
 
+physics.setDrawMode("hybrid")
+
 
 
 local speed = 5500
 local tm1
 local tm2
+local tm3
 local scoreTxt
 local obstaculoEsq
 local obstaculoDir
@@ -20,7 +23,7 @@ local bkg2
 local bkg3
 local bkg4
 local bkg5
-
+local numObst = 1500
 
 
 
@@ -28,11 +31,12 @@ local bkg5
 
 
 --Add funções
+local onCollision = {}
 local velocidadeUp = {}
 local velocidade = {}
 local criarPersonagem = {}
 local bgScroll = {}
-
+local moverInimigo = {}
 
 
 
@@ -61,11 +65,12 @@ function scene:show(event)
 
 
   if(phase == "did") then
-
-    tm1 = timer.performWithDelay(1500, criaObstaculo, -1)
-    tm2 = timer.performWithDelay(1500, scoreUp, 0)
+    tm1 = timer.performWithDelay(1550, criaObstaculo, -1)
+    tm2 = timer.performWithDelay(10, scoreUp, 0)
+    tm3 = timer.performWithDelay( 1900, moverInimigo , -1 )
     Runtime:addEventListener("enterFrame", gameLoop)
     Runtime:addEventListener("enterFrame", bgScroll)
+    Runtime:addEventListener("collision", onLocalCollision)
     speedTm = timer.performWithDelay( 1005, velocidadeUp, 0 )
   end
 end
@@ -118,24 +123,12 @@ function setupBG()
   scene.view:insert(bkg5)
 end
 
---TETO E PISO
-  teto = display.newRect( x2, -1, x +100, 1 )
-  teto:setFillColor( 0,0,0 )
-  physics.addBody( teto, "static" )
-  teto.name = "teto"
-
-  piso = display.newRect( x2, y, x +100, 1 )
-  piso:setFillColor( 0, 0, 0 )
-  physics.addBody( piso, "static" )
-  piso.name = "piso"
-
-
 
 function setupGroups()
-  obstaculosGroup = display.newGroup( )
-  personagemGroup = display.newGroup( )
-  scene.view:insert(obstaculos)
-  scene.view:insert(personagemGroup)
+  blocks = display.newGroup()
+  playerGroup = display.newGroup( )
+  scene.view:insert( blocks )
+  scene.view:insert( playerGroup )
 end
 
 function criaObstaculo()
@@ -145,17 +138,17 @@ function criaObstaculo()
    physics.addBody(obstaculoDir, "kinematic")
    obstaculoDir:addEventListener("touch", removeObstaculo)
    obstaculoDir.y = math.random(25 , y)
-   obstaculoDir.rotation = math.random(x)
+   obstaculoDir.rotation = math.random(360)
    transition.to( obstaculoDir, {time = speed, x = -50, y = math.random(y)})
   -- obstaculosGroup:insert(obstaculoDir)
 
    --Obstáculos da esquerda
    obstaculoEsq = display.newImage("Img/banana.png", 0, 150)
-   physics.addBody(obstaculoDir, "kinematic")
+   physics.addBody(obstaculoEsq, "kinematic")
    obstaculoEsq:addEventListener("touch", removeObstaculo)
    obstaculoEsq.y = math.random(25 , y)
-   obstaculoEsq.rotation = math.random(x)
-   transition.to( obstaculoEsq, {time = speed, x = 500, y = math.random(y)})
+   obstaculoEsq.rotation = math.random(360)
+   transition.to( obstaculoEsq, {time = speed, x = 1000, y = math.random(y)})
 end
 
 
@@ -198,21 +191,24 @@ end
 
 function scoreUp()
    --incrementando o score
-    score = score + 10
+    --score = score + 10
     scoreTxt.text = string.format( "Score %d", score)
 end
 
 
 function setupInimigo()
   personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
-  transition.to( personagem, {time = 1900, x = math.random(x), y = math.random(y)})
+  physics.addBody(personagem, "kinematic")
+ -- transition.to( personagem, {time = 1900, x = math.random(x), y = math.random(y)})
 end
 
-
+function moverInimigo(event)
+  transition.to( personagem, {time = 1900, x = math.random(480), y = math.random(320)})
+end
 
 function removeObstaculo(e)
   if e.phase == "ended" then
-    score = score + 1
+    score = score + 5
     display.remove(e.target)
   end
 end
@@ -227,35 +223,55 @@ function velocidade()
 end
 
 function velocidadeUp(event)
-    if (score == 50) then
+    if (score == 100) then
         velocidade()
     end
-    if (score == 70) then
+    if (score == 170) then
         velocidade()
     end
-    if (score == 90) then
+    if (score == 250) then
         velocidade()
     end
-    if (score == 1000) then
+    if (score == 270) then
+        velocidade()
+    end
+    if (score == 270) then
         velocidade()
     end
 end
 
---function onLocalCollision(event)
-  --if ( event.phase == "began" ) then
+function onLocalCollision(event)
+ if ( event.phase == "began" ) then
 
-
-  --end
---end
+    if(event.object1.name == "personagem" and event.object2.name == "obstaculoDir") then            
+            gameOver()
+        end
+         
+    if(event.object1.name == "obstaculoDir" and event.object2.name == "personagem") then            
+            gameOver()
+        end
+    if(event.object1.name == "personagem" and event.object2.name == "obstaculoEsq") then            
+            gameOver()
+        end
+         
+    if(event.object1.name == "obstaculoEsq" and event.object2.name == "personagem") then            
+            gameOver()
+        end
+  end
+end
 
 
 function gameLoop()
   bgScroll()
 end
 
+function gameOver(  )
+  display.remove( personagem )
+  display.remove( obstaculoDir )
+  display.remove( obstaculoEsq )
 
-velocidade()
-velocidadeUp()
+  composer.gotoScene( "gameover")
+end
 
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
