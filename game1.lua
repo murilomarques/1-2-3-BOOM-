@@ -4,7 +4,7 @@ local physics = require("physics")
 physics.start()
 physics.setScale( 50 )
 
-physics.setDrawMode("hybrid")
+--physics.setDrawMode("hybrid")
 
 
 
@@ -136,7 +136,8 @@ function criaObstaculo()
    obstaculoDir = display.newImage("Img/banana.png", x, y)
    obstaculoDir.isSensor = true
    obstaculoDir.name = "obstaculo"
-   physics.addBody(obstaculoDir, "kinematic")
+   physics.addBody(obstaculoDir, "dynamic")
+   obstaculoDir.isFixedRotation = true
    obstaculoDir:addEventListener("touch", removeObstaculo)
    obstaculoDir.y = math.random(25 , y)
    obstaculoDir.rotation = math.random(360)
@@ -147,7 +148,8 @@ function criaObstaculo()
    obstaculoEsq = display.newImage("Img/banana.png", 0, 150)
    obstaculoEsq.name = "obstaculo"
    obstaculoEsq.isSensor = true
-   physics.addBody(obstaculoEsq, "kinematic")
+   physics.addBody(obstaculoEsq, "dynamic")
+   obstaculoEsq.isFixedRotation = true
    obstaculoEsq:addEventListener("touch", removeObstaculo)
    obstaculoEsq.y = math.random(25 , y)
    obstaculoEsq.rotation = math.random(360)
@@ -203,12 +205,12 @@ function setupInimigo()
   personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
   personagem.name = "personagem"
   personagem.isSensor = true
-  physics.addBody(personagem, "kinematic")
+  physics.addBody(personagem, "static")
  -- transition.to( personagem, {time = 1900, x = math.random(x), y = math.random(y)})
 end
 
 function moverInimigo(event)
-  transition.to( personagem, {time = 1900, x = math.random(480), y = math.random(320)})
+  transition.to( personagem, {time = 1900, x = math.random(460), y = math.random(300)})
 end
 
 function removeObstaculo(e)
@@ -265,11 +267,7 @@ function gameLoop()
 end
 
 function gameOver(  )
-  display.remove( personagem )
-  display.remove( obstaculoDir )
-  display.remove( obstaculoEsq )
-
-  composer.gotoScene( "gameover")
+print('MORREU')
 end
 
 scene:addEventListener( "create", scene )
