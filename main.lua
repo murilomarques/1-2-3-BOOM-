@@ -8,7 +8,7 @@ x2 = display.contentCenterX
 y2 = display.contentCenterY
 
 local composer = require ("composer")
-composer.gotoScene( "game1" )
+composer.gotoScene( "menu" )
 
 
 score = 0

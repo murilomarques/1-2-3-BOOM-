@@ -2,7 +2,7 @@ local composer = require("composer")
 local scene = composer.newScene( )
 local physics = require("physics")
 physics.start()
-physics.setScale( 50 )
+physics.setScale( 70 )
 
 --physics.setDrawMode("hybrid")
 
@@ -23,6 +23,7 @@ local bkg2
 local bkg3
 local bkg4
 local bkg5
+local life
 
 
 
@@ -36,7 +37,8 @@ local velocidade = {}
 local criarPersonagem = {}
 local bgScroll = {}
 local moverInimigo = {}
-
+local gameover = {}
+local loseLife = {}
 
 
 
@@ -68,7 +70,7 @@ function scene:show(event)
     tm2 = timer.performWithDelay(10, scoreUp, 0)
     tm3 = timer.performWithDelay( 1900, moverInimigo , -1 )
     Runtime:addEventListener("enterFrame", gameLoop)
-    Runtime:addEventListener("enterFrame", bgScroll)
+    --Runtime:addEventListener("enterFrame", bgScroll)
     Runtime:addEventListener("collision", onLocalCollision)
     speedTm = timer.performWithDelay( 1005, velocidadeUp, 0 )
   end
@@ -202,7 +204,7 @@ end
 
 
 function setupInimigo()
-  personagem = display.newImage("Img/macaco.png", x / 6, y / 2)
+  personagem = display.newImage("Img/macaco.png", x2 , y2 )
   personagem.name = "personagem"
   personagem.isSensor = true
   physics.addBody(personagem, "static")
@@ -262,12 +264,24 @@ function onLocalCollision(event)
 end
 
 
-function gameLoop()
-  bgScroll()
-end
+
+
+local options1 = {  
+  effect = "fade", time = 1000
+}
+
 
 function gameOver(  )
-print('MORREU')
+  display.remove( personagem )
+  display.remove( obstaculoDir )
+  display.remove( obstaculoEsq )
+  transition.cancel( obstaculoDir )
+  transition.cancel( obstaculoEsq )
+  composer.gotoScene( "gameover", options1 )
+end
+
+function gameLoop()
+  bgScroll()
 end
 
 scene:addEventListener( "create", scene )

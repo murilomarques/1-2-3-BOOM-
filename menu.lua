@@ -4,14 +4,8 @@ local scene = composer.newScene( )
 local menuBG
 local playBtn
 local creditsBtn
-local howtoplayBtn
-local scroll = 1
-local cloud1
-local cloud2
-local cloud3
-local iconMainScreen
 local bg
-local easyFlyLogo
+local logo
 local bgScroll = {}
 local setupPlayer = {}
 local howToPlay = {}
@@ -40,7 +34,6 @@ function scene:show( event )
 	if (phase == "will") then		
 	elseif (phase == "did") then
 		playBtn:addEventListener( "tap", startGame )
-		howtoplayBtn:addEventListener( "tap", howToPlay )
 		creditsBtn:addEventListener( "tap", credits )
 		Runtime:addEventListener( "enterFrame", bgScroll )
 	end
@@ -52,7 +45,6 @@ function scene:hide( event )
 
 	if (phase == "will") then
 		playBtn:removeEventListener( "tap", startGame )
-		howtoplayBtn:removeEventListener( "tap", howToPlay )
 		creditsBtn:removeEventListener( "tap", credits )
 		Runtime:removeEventListener( "enterFrame", bgScroll )
 		end
@@ -64,74 +56,29 @@ function setupGroups( )
 end
 
 function setupBG(  )
-	bg = display.newImageRect("image/bgAzul.png", _W, _H)
-	bg.x = _W2
-	bg.y = _H2
-	scene.view:insert( bg)
+	bg = display.newImageRect("Img/bgAzul.png", x + 25, y + 25)
+	bg.x = x2
+	bg.y = y2 - 10
+	scene.view:insert( bg )
 
-	cloud1 = display.newImage("image/nuvem.png", 300, 25)
-	cloud1.x = _W2
-	cloud1.y = 50
-	scene.view:insert(cloud1)
-
-	cloud2 = display.newImage("image/nuvem.png", 300, 25)
-	cloud2.x = cloud1.x + _W
-	cloud2.y = 50
-	scene.view:insert(cloud2)	
-
-	cloud3 = display.newImage("image/nuvem.png", 300, 25)
-	cloud3.x = cloud2.x + _W
-	cloud3.y = 50
-	scene.view:insert(cloud3)
-
-	easyFlyLogo = display.newImage("image/mainscreenBG01.png")
-	easyFlyLogo.x = _W2
-	easyFlyLogo.y = _H2 - 100
-	scene.view:insert(easyFlyLogo)
+	logo = display.newImageRect("Img/logo.png",350,170)
+	logo.x = x2
+	logo.y = y2 - 70
+	scene.view:insert(logo)
 	
-	menuBG = display.newImageRect("image/mainscreenBG.png", _W, 100 )
-	menuBG.x = _W2
-	menuBG.y = _H - 30
-	scene.view:insert(menuBG)
-
-	iconMainScreen = display.newImage("image/iconMainScreen.png")
-	iconMainScreen.x = _W2
-	iconMainScreen.y = _H2 + 10
-	scene.view:insert(iconMainScreen)	
-	
-
-	playBtn = display.newImage( "image/playBtn.png")
-	playBtn.x = _W2 - 150
-	playBtn.y = _H2 + 120
+	playBtn = display.newImageRect( "Img/play.png",110,90)
+	playBtn.x = x2 - 120
+	playBtn.y = y2 + 110
 	scene.view:insert(playBtn)
 
-	howtoplayBtn = display.newImage( "image/howtoplayBtn.png")
-	howtoplayBtn.x = _W2
-	howtoplayBtn.y = _H2 + 120
-	scene.view:insert(howtoplayBtn)
 
-	creditsBtn = display.newImage( "image/creditsBtn.png")
-	creditsBtn.x = _W2 + 150
-	creditsBtn.y = _H2 + 120
+	creditsBtn = display.newImageRect( "Img/credits.png", 110,90)
+	creditsBtn.x = x2 + 120
+	creditsBtn.y = y2 + 100
 	scene.view:insert(creditsBtn)
 
 end
 
-function bgScroll (event)
-cloud1.x = cloud1.x - scroll
-cloud2.x = cloud2.x - scroll
-cloud3.x = cloud3.x - scroll
-  -- Movendo as imagens para o fim da tela
-if (cloud1.x + cloud1.contentWidth) < 0 then
-cloud1:translate( _W * 3, 0 )
-  end
-if (cloud2.x + cloud2.contentWidth) < 0 then
-cloud2:translate( _W * 3, 0 )
-  end
-if (cloud3.x + cloud3.contentWidth) < 0 then
-cloud3:translate( _W * 3, 0 )
-  end
-end
 
 local options = {
 	
@@ -140,13 +87,9 @@ local options = {
 
 function startGame( )
 		
-	composer.gotoScene( "stage", options)
+	composer.gotoScene( "game1", options)
 end
 
-function howToPlay( )
-	audio.stop(1)
-	composer.gotoScene( "howtoplay1", options)
-end
 
 function credits( )
 	audio.stop(1)
