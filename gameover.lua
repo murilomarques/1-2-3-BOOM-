@@ -5,32 +5,31 @@ local retryBtn
 local menuBtn
 local scoreTxt
 local iconGameOver
-local finalScore = {}
+
 
 
 
 function scene:create( event )
 	local sceneGroup = self.view	
 
-	finalScore()
 
 	gameoverBG = display.newImageRect( "Img/gameoverBG.png", x, y )
 	gameoverBG.x = x2
 	gameoverBG.y = y2
 	sceneGroup:insert(gameoverBG)	
 
-	menuBtn = display.newImage( "Img/menu.png")
-	menuBtn.x = 80
+	menuBtn = display.newImageRect( "Img/menu.png",110,70)
+	menuBtn.x = 280
 	menuBtn.y = y2 + 120
 	sceneGroup:insert(menuBtn)
 
-	retryBtn = display.newImage( "Img/retry.png")
-	retryBtn.x = 240
+	retryBtn = display.newImageRect( "Img/retry.png",110,70)
+	retryBtn.x = 150
 	retryBtn.y = y2 + 120
 	sceneGroup:insert(retryBtn)
 
-	scoreTxt = display.newText('' .. score, x2 - 25, y2 + 20, native.systemFontBold, 16)
-  	scoreTxt:setTextColor(255, 255, 255)
+	scoreTxt = display.newText('' .. score, x2 + 6, y2 + 9, native.systemFontBold, 16)
+  	scoreTxt:setTextColor(0, 0, 0)
   	scene.view:insert( scoreTxt )
 
 
@@ -47,8 +46,8 @@ function scene:show( event )
 	end
 		
 	if (phase == "did") then
-		menuBtn:addEventListener( "tap", menuGame )
-		retryBtn:addEventListener( "tap", startGame )	
+		menuBtn:addEventListener( "touch", menuGame )
+		retryBtn:addEventListener( "touch", startGame )	
 	end
 end
 
@@ -63,23 +62,17 @@ function scene:hide( event )
 end
 
 
-function finalScore( )
-	scoreFinal = score * score1
-end
 
-local options = {
-	
-	effect = "fade", time = 250
-}
-
-function menuGame( )		
+function menuGame( )	
+	composer.removeScene('gameover')	
 	composer.gotoScene( "menu", options )
 	score = 0
 	score1 = 1
 end
 
 function startGame( )
-	composer.gotoScene( "stage", options )
+	composer.removeScene('gameover')
+	composer.gotoScene( "game1", options )
 	score = 0
 	score1 = 1
 end
