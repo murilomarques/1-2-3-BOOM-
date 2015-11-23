@@ -35,7 +35,8 @@ local nolife1
 local nolife2
 local nolife3
 local lifeTm
-
+local scoreBar
+local lifeBar
 
 --Add funções
 local bgScroll = {}
@@ -79,38 +80,48 @@ function scene:create(event)
   bkg5.y = y2
   sceneGroup:insert(bkg5)
 
-  scoreTxt = display.newText('Score 0', x2 - 50, 300 , native.systemFontBold, 16)
-  scoreTxt:setTextColor(0, 0, 0)
+  scoreBar = display.newImageRect( "Img/score.png", 80 , 60 )
+  scoreBar.x = 40
+  scoreBar.y = 288
+  sceneGroup:insert(scoreBar)
+
+  scoreTxt = display.newText(' 0', 40, 304 , native.systemFont, 16)
+  scoreTxt:setTextColor(1, 1, 1)
   sceneGroup:insert(scoreTxt)
 
+  lifeBar = display.newImageRect( "Img/lifebar.png",100,35 )
+  lifeBar.x = 430 
+  lifeBar.y = 16
+  sceneGroup:insert(lifeBar)
+
   nolife1 = display.newImageRect( "Img/nolife.png", 25, 25 )
-  nolife1.x = 414
+  nolife1.x = 403
   nolife1.y = 15
   sceneGroup:insert(nolife1)
 
   nolife2 = display.newImageRect( "Img/nolife.png", 25, 25 )
-  nolife2.x = 440
+  nolife2.x = 430
   nolife2.y = 15
   sceneGroup:insert(nolife2)
   
   nolife3 = display.newImageRect( "Img/nolife.png", 25, 25 )
-  nolife3.x = 466
+  nolife3.x = 457
   nolife3.y = 15
   sceneGroup:insert(nolife3)
 
 
   life1 = display.newImageRect( "Img/life.png", 25, 25 )
-  life1.x = 414
+  life1.x = 403
   life1.y = 15
   sceneGroup:insert(life1)
 
   life2 = display.newImageRect( "Img/life.png", 25, 25 )
-  life2.x = 440
+  life2.x = 430
   life2.y = 15
   sceneGroup:insert(life2)
   
   life3 = display.newImageRect( "Img/life.png", 25, 25 )
-  life3.x = 466
+  life3.x = 457
   life3.y = 15
   sceneGroup:insert(life3)
   
@@ -118,7 +129,7 @@ function scene:create(event)
   function scoreUp()
    --incrementando o score
     --score = score + 10
-    scoreTxt.text = string.format( "Score %d", score)
+    scoreTxt.text = string.format( " %d", score)
 end
 
   setupInimigo()
@@ -259,7 +270,7 @@ end
 
 
 function velocidade()
-    speed = speed - 600
+    speed = speed - 350
     --Icon
     local icon = display.newImage('Img/speed.png', x2 , y2)
     transition.from(icon, {time = 200, alpha = 0.1, onComplete = function() timer.performWithDelay(500, function() 

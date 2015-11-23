@@ -28,7 +28,7 @@ function scene:create( event )
 	retryBtn.y = y2 + 120
 	sceneGroup:insert(retryBtn)
 
-	scoreTxt = display.newText('' .. score, x2 + 6, y2 + 9, native.systemFontBold, 16)
+	scoreTxt = display.newText('' .. score, x2 + 13, y2 + 9, native.systemFontBold, 16)
   	scoreTxt:setTextColor(0, 0, 0)
   	scene.view:insert( scoreTxt )
 
