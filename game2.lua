@@ -1,6 +1,4 @@
---IMPOSSÍVEL
-
-
+--DIFÍCIL
 
 
 local composer = require("composer")
@@ -31,8 +29,6 @@ local bkg5
 local sceneGroup
 
 
-
-
 --Add funções
 local bgScroll = {}
 local moverInimigo = {}
@@ -42,11 +38,6 @@ local velocidade = {}
 local criarPersonagem = {}
 local gameover = {}
 
-
-  --setupBG()
-  --setupGroups()
-  --setupInimigo()
-  --setupScore()
 
 
 
@@ -79,14 +70,21 @@ function scene:create(event)
   bkg5.y = y2
   sceneGroup:insert(bkg5)
 
-  scoreTxt = display.newText('Score 0', x2 - 50, 300 , native.systemFontBold, 16)
-  scoreTxt:setTextColor(0, 0, 0)
+  scoreBar = display.newImageRect( "Img/score.png", 80 , 60 )
+  scoreBar.x = 40
+  scoreBar.y = 288
+  sceneGroup:insert(scoreBar)
+
+  scoreTxt = display.newText(' 0', 40, 304 , native.systemFont, 16)
+  scoreTxt:setTextColor(1, 1, 1)
   sceneGroup:insert(scoreTxt)
+
+  
 
   function scoreUp()
    --incrementando o score
     --score = score + 10
-    scoreTxt.text = string.format( "Score %d", score)
+    scoreTxt.text = string.format( " %d", score)
 end
 
   setupInimigo()
@@ -226,7 +224,7 @@ end
 
 
 function velocidade()
-    speed = speed - 600
+    speed = speed - 350
     --Icon
     local icon = display.newImage('Img/speed.png', x2 , y2)
     transition.from(icon, {time = 200, alpha = 0.1, onComplete = function() timer.performWithDelay(500, function() 
@@ -272,13 +270,8 @@ end
 
 
 
-local options1 = {  
-  effect = "fade", time = 1000
-}
-
-
 function gameOver(  )
-  Runtime:removeEventListener('enterFrame', gameLoop)
+    Runtime:removeEventListener('enterFrame', gameLoop)
     Runtime:removeEventListener('collision', onLocalCollision) 
     timer.cancel(tm1)
     tm1 = nil
@@ -292,7 +285,7 @@ function gameOver(  )
   --timer.pause( tm3 )
   display.remove(personagem)
   display.remove( obstaculo )
-  composer.removeScene("game1")
+  composer.removeScene("game2")
   composer.gotoScene( "gameover", options1 )
 end
 

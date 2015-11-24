@@ -6,9 +6,8 @@ local playBtn
 local creditsBtn
 local bg
 local logo
-local bgScroll = {}
-local setupPlayer = {}
-local howToPlay = {}
+local sceneGroup
+
 
 
 
@@ -45,7 +44,7 @@ function scene:show( event )
 	if (phase == "will") then		
 	elseif (phase == "did") then
 		playBtn:addEventListener( "touch", startGame )
-		--creditsBtn:addEventListener( "touch", credits )
+		creditsBtn:addEventListener( "touch", creditsScene )
 	end
 end
 
@@ -54,8 +53,8 @@ function scene:hide( event )
 	local phase = event.phase
 
 	if (phase == "will") then
-		--playBtn:removeEventListener( "tap", startGame )
-		--creditsBtn:removeEventListener( "tap", credits )
+		playBtn:removeEventListener( "tap", startGame )
+		creditsBtn:removeEventListener( "tap", creditsScene )
 		end
 end
 
@@ -65,12 +64,15 @@ local options = {
 	effect = "fade", time = 500
 }
 
-function startGame( )
-		
+function startGame( )	
 	composer.removeScene('menu')
-	composer.gotoScene( "game1", options)
+	composer.gotoScene( "stage", options)
 end
 
+function creditsScene( )	
+	composer.removeScene('menu')
+	composer.gotoScene( "creditspage", options)
+end
 
 
 scene:addEventListener( "create", scene )
